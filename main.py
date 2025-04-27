@@ -24,26 +24,29 @@ def ask_model(prompt):
         return None
 
 def generate_task():
+    prompt = f"""Generate a math task.
 
-    prompt = f"""Generate a math problem.
-
-It should be simple .
-It shouldn`t unlude simple text, only formuls 
-Analyze the task and write a short answer to it
-random generation key - {random.random()}
-answer is number or numbers
-I just need an answer, remove the words: question and answer
-output your answer by type :
-problem: problem
-answer: answer
-
-
-"""
+    It should be very simple.
+    Include only formulas, no descriptive text.
+    Analyze the task and provide a brief numeric response.
+    Random generation key: {random.random()}
+    Output format:
+    task: [mathematical task]
+    response: [numeric response]
+    """
 
     answer = str(ask_model(prompt)).lower()
 
     return answer
 
+def split_gen():
+    task = generate_task()
+    task = task.replace(" ", "")
+
+    task1 = task.replace("task:", "")
+    answer = task1.split("response:")
+
+    return answer
 
 if __name__ == "__main__":
-    print(generate_task())
+    print(split_gen())
