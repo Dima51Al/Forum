@@ -1,7 +1,7 @@
 import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
-
+from main import generate_task
 from dotenv import load_dotenv
 import os
 
@@ -24,7 +24,7 @@ async def start(update: Update, context):
 async def echo(update: Update, context):
     user_message = update.message.text
     logger.info(f"Пользователь {update.message.from_user.username} написал: {user_message}")
-    await update.message.reply_text("иди спать")
+    await update.message.reply_text(generate_task())
 
 
 def main():
