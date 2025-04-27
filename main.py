@@ -1,7 +1,7 @@
 import random
 
 import requests
-import json
+
 
 def ask_model(prompt):
     url = "http://127.0.0.1:11434/api/generate"
@@ -23,6 +23,7 @@ def ask_model(prompt):
         print(f"Ошибка: {response.status_code}, {response.text}")
         return None
 
+
 def generate_task():
     prompt = f"""Generate a math task.
 
@@ -39,6 +40,7 @@ def generate_task():
 
     return answer
 
+
 def split_gen():
     task = generate_task()
     task = task.replace(" ", "")
@@ -47,6 +49,7 @@ def split_gen():
     answer = task1.split("response:")
 
     return answer
+
 
 if __name__ == "__main__":
     print(split_gen())

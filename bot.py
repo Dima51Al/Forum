@@ -8,20 +8,19 @@ import os
 load_dotenv()
 TOKEN = os.getenv("API_TOKEN")
 
-# Настройка логирования
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
-# Клавиатура с кнопкой
 keyboard = ReplyKeyboardMarkup(
     [["Сгенерировать вопрос"]],
     resize_keyboard=True
 )
 
-# Обработчик команды /start
+
+# обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Здравствуйте! Нажмите кнопку ниже для генерации вопроса.",
@@ -29,7 +28,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     logger.info(f"Пользователь {update.message.from_user.username} запустил команду /start")
 
-# Обработчик нажатия кнопки
+
+# обработчик нажатия кнопки
 async def handle_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
     logger.info(f"Пользователь {update.message.from_user.username} нажал: {user_message}")
@@ -40,7 +40,6 @@ async def handle_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
             res1 = req[0] if len(req) > 0 else "Default Response 1"
             res2 = req[1] if len(req) > 1 else "Default Response 2"
 
-            # Сохраняем правильный ответ в контексте пользователя
             context.user_data["correct_answer"] = res2
 
             await update.message.reply_text(res1)
@@ -48,15 +47,17 @@ async def handle_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
             logger.error(f"Ошибка в split_gen: {e}")
             await update.message.reply_text("Ошибка генерации вопроса. Попробуйте позже.")
     else:
-        # Проверка ответа пользователя
+
         correct_answer = context.user_data.get("correct_answer")
         if correct_answer:
             if user_message.strip().lower() == str(correct_answer).strip().lower():
                 await update.message.reply_text("Ответ правильный! Нажмите кнопку для следующего вопроса.")
             else:
-                await update.message.reply_text("Ответ неправильный. Попробуйте еще раз или нажмите кнопку для нового вопроса.")
+                await update.message.reply_text(
+                    "Ответ неправильный. Попробуйте еще раз или нажмите кнопку для нового вопроса.")
         else:
             await update.message.reply_text("Пожалуйста, сначала нажмите кнопку 'Сгенерировать вопрос'.")
+
 
 def main():
     application = ApplicationBuilder().token(TOKEN).build()
@@ -65,6 +66,7 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_button))
 
     application.run_polling()
+
 
 if __name__ == '__main__':
     main()
